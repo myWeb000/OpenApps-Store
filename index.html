@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenApps Store - Home</title>
+    <style>
+        * {
+            box-sizing: border-box; /* Prevent padding/margin issues */
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .navbar {
+            background-color: #d32f2f; /* Reddish theme */
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .navbar a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            font-size: 1rem;
+        }
+        .navbar a:hover {
+            color: #ffeb3b; /* Yellowish glow on hover */
+        }
+        .container {
+            max-width: 1000px; /* Reduced for better fit */
+            margin: 15px auto;
+            padding: 0 10px;
+        }
+        h1 {
+            text-align: center;
+            color: #d32f2f;
+            animation: glow 2s infinite alternate;
+            font-size: 1.8rem;
+            margin: 10px 0;
+        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #ffeb3b;
+            }
+            to {
+                text-shadow: 0 0 20px #ffeb3b;
+            }
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns for desktop */
+            gap: 15px;
+            padding: 10px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 0 10px rgba(211, 47, 47, 0.3); /* Subtle glow */
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeIn 1s ease-in-out;
+            cursor: pointer;
+            width: 100%;
+            max-width: 280px; /* Slightly smaller for clean fit */
+            margin: 0 auto;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #d32f2f; /* Stronger glow on hover */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 9/16; /* Portrait mode */
+            object-fit: cover;
+        }
+        .card h3 {
+            text-align: center;
+            padding: 8px;
+            color: #d32f2f;
+            font-size: 0.95rem;
+            margin: 5px 0;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-grid {
+                grid-template-columns: 1fr; /* Single column for mobile */
+                gap: 20px;
+            }
+            .card {
+                max-width: 220px; /* Smaller for mobile */
+            }
+            .navbar a {
+                font-size: 0.9rem;
+                margin: 0 5px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .container {
+                padding: 0 5px;
+            }
+        }
+        @media (max-width: 480px) {
+            .navbar a {
+                display: block;
+                margin: 5px 0;
+            }
+            .container {
+                padding: 0 5px;
+            }
+            .card {
+                max-width: 180px; /* Even smaller for very small screens */
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Me</a>
+        <a href="contact.html">Contact Me</a>
+    </div>
+    <div class="container">
+        <h1>OpenApps Store</h1>
+        <div class="app-grid">
+            <a href="app-detail.html?app=app1">
+                <div class="card">
+                    <img src="image/screen1.jpg" alt="App 1 Screen">
+                    <h3>Darzi Book App</h3>
+                </div>
+            </a>
+            <a href="app-detail.html?app=app2">
+                <div class="card">
+                    <img src="image/screen2.jpg" alt="App 2 Screen">
+                    <h3>Simple Khata</h3>
+                </div>
+            </a>
+            <a href="app-detail.html?app=app3">
+                <div class="card">
+                    <img src="image/screen2.jpg" alt="App 3 Screen">
+                    <h3>TestPrep Pro</h3>
+                </div>
+            </a>
+            <!-- <a href="app-detail.html?app=app4">
+                <div class="card">
+                    <img src="image/screen4.png" alt="App 4 Screen">
+                    <h3>App 4</h3>
+                </div>
+            </a>
+            <a href="app-detail.html?app=app5">
+                <div class="card">
+                    <img src="image/screen5.png" alt="App 5 Screen">
+                    <h3>App 5</h3>
+                </div>
+            </a>
+            <a href="app-detail.html?app=app6">
+                <div class="card">
+                    <img src="image/screen6.png" alt="App 6 Screen">
+                    <h3>App 6</h3>
+                </div>
+            </a> -->
+        </div>
+    </div>
+</body>
+</html>

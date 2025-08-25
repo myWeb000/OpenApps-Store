@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenApps Store - App Details</title>
+    <style>
+        * {
+            box-sizing: border-box; /* Prevent padding/margin issues */
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .navbar {
+            background-color: #d32f2f; /* Reddish theme */
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .navbar a {
+            color: white;
+            margin: 0 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            font-size: 1rem;
+        }
+        .navbar a:hover {
+            color: #ffeb3b; /* Yellowish glow on hover */
+        }
+        .container {
+            max-width: 1000px; /* Reduced for better fit */
+            margin: 15px auto;
+            padding: 0 10px;
+        }
+        h1 {
+            text-align: center;
+            color: #d32f2f;
+            animation: glow 2s infinite alternate;
+            font-size: 1.8rem;
+            margin: 10px 0;
+        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #ffeb3b;
+            }
+            to {
+                text-shadow: 0 0 20px #ffeb3b;
+            }
+        }
+        .detail {
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 0 25px rgba(211, 47, 47, 0.6); /* Stronger glow */
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        #app-screens {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .detail img {
+            width: 100%;
+            max-width: 200px;
+            margin: 5px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .detail img:hover {
+            transform: scale(1.1);
+        }
+        .download-btn {
+            display: block;
+            width: 180px;
+            margin: 15px auto;
+            padding: 10px;
+            background-color: #d32f2f;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .download-btn:hover {
+            background-color: #b71c1c;
+        }
+        .back-btn {
+            display: inline-block;
+            margin: 15px 10px;
+            padding: 10px 20px;
+            background-color: #d32f2f;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .back-btn:hover {
+            background-color: #b71c1c;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #app-screens {
+                flex-direction: column; /* Single column for mobile */
+                align-items: center;
+            }
+            .detail img {
+                max-width: 160px; /* Smaller for mobile */
+            }
+            .download-btn {
+                width: 150px;
+            }
+            .back-btn {
+                margin: 10px 5px;
+            }
+            .navbar a {
+                font-size: 0.9rem;
+                margin: 0 5px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .container {
+                padding: 0 5px;
+            }
+        }
+        @media (max-width: 480px) {
+            .navbar a {
+                display: block;
+                margin: 5px 0;
+            }
+            .container {
+                padding: 0 5px;
+            }
+            .detail img {
+                max-width: 120px; /* Even smaller for very small screens */
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Me</a>
+        <a href="contact.html">Contact Me</a>
+    </div>
+    <div class="container">
+        <a href="index.html" class="back-btn">Back to Home</a>
+        <div class="detail" id="app-detail">
+            <h2 id="app-title"></h2>
+            <p id="app-description"></p>
+            <h3>Screens:</h3>
+            <div id="app-screens"></div>
+            <a id="app-download" href="#" download class="download-btn">Download</a>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+
+                    // Convert sheet to JSON to filter blank rows
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                    // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                      row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    // Fallback
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                      headerRowIndex = 0;
+                    }
+
+                    // Convert filtered JSON back to CSV
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error(e);
+                    return "";
+                }
+            }
+            return gk_fileData[filename] || "";
+        }
+    </script>
+    <script>
+        const appData = {
+            app1: {
+                title: "Darzi Book App",
+                description: "The Darzi Book App simplifies order management for tailors by securely saving customer measurements using Firebase. Users can fetch their data anytime, even if their account is deleted. This free, user-friendly app ensures seamless task organization and data accessibility.",
+                screens: ["image/app1/screen1.jpg", "image/app1/screen2.jpg", "image/app1/screen3.jpg"],
+                download: "downloads/app1.apk"
+            },
+            app2: {
+                title: "Simple Khata",
+                description: "The Simple Khata App is a straightforward digital ledger for managing daily payment records and expenses. It allows users to easily store, edit, and delete transactions, generate PDF reports, and share them with others. Ideal for tracking friends' or customers' daily expenses, it ensures simplicity and accessibility.",
+                screens: ["image/app2/screen1.jpg", "image/app2/screen2.jpg", "image/app2/screen3.jpg"],
+                download: "image/app2/simple_khata.apk"
+            },
+            app3: {
+                title: "TestPrep Pro",
+                description: "The Test Prep Pro app is designed for efficient preparation for general tests like JST, PST, and other IBA/NTS exams. It offers a comprehensive collection of MCQs and concise key point notes to enhance learning. Users can practice and revise effectively to maximize their scores.",
+                screens: ["image/app3/screen1.jpg", "image/app3/screen2.jpg", "image/app3/screen3.jpg"],
+                download: "downloads/app3.apk"
+            },
+            app4: {
+                title: "App 4",
+                description: "Health and fitness tracker app.",
+                screens: ["image/app4/screen1.jpg", "image/app4/screen2.jpg", "image/app4/screen3.jpg"],
+                download: "downloads/app4.apk"
+            },
+            app5: {
+                title: "App 5",
+                description: "Social networking made easy.",
+                screens: ["image/app5/screen1.jpg", "image/app5/screen2.jpg", "image/app5/screen3.jpg"],
+                download: "downloads/app5.apk"
+            },
+            app6: {
+                title: "App 6",
+                description: "Learning app for all ages.",
+                screens: ["image/app6/screen1.jpg", "image/app6/screen2.jpg", "image/app6/screen3.jpg"],
+                download: "downloads/app6.apk"
+            }
+        };
+
+        // Get the app ID from the URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const appId = urlParams.get('app');
+
+        // Populate the app details
+        if (appData[appId]) {
+            document.getElementById('app-title').textContent = appData[appId].title;
+            document.getElementById('app-description').textContent = appData[appId].description;
+            document.getElementById('app-download').href = appData[appId].download;
+
+            const screensContainer = document.getElementById('app-screens');
+            appData[appId].screens.forEach(screen => {
+                const img = document.createElement('img');
+                img.src = screen;
+                img.alt = `${appData[appId].title} Screen`;
+                screensContainer.appendChild(img);
+            });
+        } else {
+            document.getElementById('app-detail').innerHTML = '<p>App not found.</p>';
+        }
+    </script>
+</body>
+</html>
